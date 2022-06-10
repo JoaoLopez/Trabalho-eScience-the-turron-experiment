@@ -19,6 +19,7 @@ PALETTE = {
     'female': 'tomato',
 }
 
+#NÃO É DETERMINÍSTICO(SALVA UM ARQUIVO EXTERNO)
 def save_figure(fig, name, format='pdf', dpi=300, **kwargs):
     fig.savefig(
         f"results/{name}",
@@ -29,6 +30,8 @@ def save_figure(fig, name, format='pdf', dpi=300, **kwargs):
     )
 # %%
 
+#NÃO É DETERMINÍSTICO(LÊ CONTEÚDO DE UM ARQUIVO EXTERNO)
+#CONTUDO A PARTE DO PROCESSAMENTO TODA PODERIA SER DETERMINÍSTICA SE CRIÁSSEMOS UMA FUNÇÃO
 def read_csv_and_preprocess_data(filename):
     df = pd.read_csv(filename, sep=",", dtype={
         'name': str,
@@ -48,6 +51,7 @@ def read_csv_and_preprocess_data(filename):
         'overall_B': np.float64,
         'guess_expensive': str,
     })
+    #É DETERMINÍSTICA
     def rename_gender(row):
         if row['gender'] == 'f':
             return 'female'
@@ -70,6 +74,7 @@ def read_csv_and_preprocess_data(filename):
         'overall_B',
     ]).dropna()
     melted
+    #É DETERMINÍSTICA
     def get_turron_name(row):
         if "_A" in row['variable']:
             row['turron'] = 'A (expensive)'
@@ -77,6 +82,7 @@ def read_csv_and_preprocess_data(filename):
             row['turron'] = 'B (cheap)'
         return row
     melted = melted.apply(get_turron_name, axis=1)
+    #É DETERMINÍSTICA
     def rename_variables(row):
         params = ['texture', 'sweetness', 'flavour', 'visual', 'overall']
         for param in params:
@@ -104,6 +110,7 @@ melted
 
 # Gender distribution
 
+#PROCESSAMENTO PODERIA SER DETERMINÍSTICA SE CRIÁSSEMOS UMA FUNÇÃO
 labels = ['male', 'female']
 
 
@@ -123,6 +130,7 @@ save_figure(fig1, "gender_distribution.png", format='png')
 
 # Naiveness distribution
 
+#PROCESSAMENTO PODERIA SER DETERMINÍSTICA SE CRIÁSSEMOS UMA FUNÇÃO
 labels = ['naive', 'non-naive', 'NA']
 
 df_naive = df.fillna('NA')
@@ -146,6 +154,7 @@ save_figure(fig1, "naiveness_distribution.png", format='png')
 #%%
 # Hours-since-last-eat distribution
 
+#PROCESSAMENTO PODERIA SER DETERMINÍSTICA SE CRIÁSSEMOS UMA FUNÇÃO
 df_sorted_fasting = df.sort_values('hours since last eat')[['name', 'hours since last eat']]
 
 
@@ -160,6 +169,9 @@ save_figure(g.fig, "hours_since_last_eat_distribution.png", format='png')
 # ## Comparing attributes between groups
 #
 #%%
+#PROVAVELMENTE NÃO É DETERMINÍSTICA PORQUE GERA UM GRÁFICO AO FINAL (sns.catplot)
+#O PROCESSAMENTO PODERIA SER DETERMINÍSTICO SE CRIÁSSEMOS UMA FUNÇÃO SÓ PARA GERAR O GRÁFICO
+#ESSA FUNÇÃO TAMBÉM NÃO ESTÁ SENDO CHAMADA, MAS PODERIA SER
 def gender_by_turron_per_category(melted):
     for param  in ['texture', 'flavour', 'visual', 'sweetness', 'overall']:
         melted['composite_variable'] = melted['variable'] + melted['turron']
@@ -173,6 +185,7 @@ def gender_by_turron_per_category(melted):
 #%% [markdown]
 # ### Gender (t-test)
 #%%
+###############################PAREI AQUI !!!!!!!!!!!!!!!!!!!!!!!!!!
 def gender_general_effect(melted):
     df = melted.copy()
     p_values = []
