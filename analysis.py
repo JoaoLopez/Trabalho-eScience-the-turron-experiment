@@ -185,7 +185,9 @@ def gender_by_turron_per_category(melted):
 #%% [markdown]
 # ### Gender (t-test)
 #%%
-###############################PAREI AQUI !!!!!!!!!!!!!!!!!!!!!!!!!!
+#NÃO É DETERMINÍSTICA (USA COMANDO PRINT)
+#MAS COMENTANDO O PRINT PODERÍAMOS TORNAR PARTE DELA DETERMINÍSTICA
+#A PARTE DE GERAÇÃO DO GRÁFICO PROVAVELMENTE SERIA NÃO DETERMINÍSTICA
 def gender_general_effect(melted):
     df = melted.copy()
     p_values = []
@@ -213,6 +215,9 @@ save_figure(g.fig, "gender_general_effect.png", format='png')
 # ### Turron by Gender
 #%%
 
+#NÃO É DETERMINÍSTICA (POIS CRIA UM GRÁFICO COM sns.catplot)
+#MAS A PARTE DE PROCESSAMENTO DOS DADOS PODERIA SER DETERMINÍSTICA
+#A FUNÇÃO TABÉM NÃO É CHAMADA
 # def turron_by_gender(melted):
 #     df = melted.copy()
 
@@ -221,6 +226,8 @@ save_figure(g.fig, "gender_general_effect.png", format='png')
 #     return sns.catplot(x="variable", y="value", hue="turron:gender", kind="bar", data=df, palette = palette)
 # turron_by_gender(melted)
 #%%
+
+#NÃO É DETERMINÍSTICA (POIS CRIA UM GRÁFICO COM sns.FacetGrid)
 def turron_by_gender2(melted):
     g = sns.FacetGrid(melted, col="variable", height=5, aspect=0.4)
     g.map(sns.barplot, "gender", "value", "turron", palette=PALETTE, errwidth="2")
@@ -243,7 +250,7 @@ save_figure(g.fig, "turron_by_gender.png", format='png')
 
 #%% [markdown]
 # ### Turron by Gender 2-way ANOVA
-
+#NÃO É UMA FUNÇÃO MAS PARECE QUE PODERIA SER DETERMINÍSTICA
 for variable in ['texture', 'visual', 'flavour', 'overall']:
     filtered = melted[melted['variable'] == variable]
     formula = 'value ~ C(turron) + C(gender) + C(turron):C(gender)'
@@ -254,6 +261,10 @@ for variable in ['texture', 'visual', 'flavour', 'overall']:
 
 
 # %%
+#NÃO É DETERMINÍSTICA POIS UTILIZA PRINTQUE
+#ACREDITO QUE PODERIA SER DETERMINÍSTICA PORQUE NÃO RETORNA NENHUM DADO
+#E FAZ CÁLCULOS ESTATÍSTICOS ENTRETANTO TERIA QUE RETORNAR O VALOR PRINTADO
+#PARA QUE PUDESSE SER DETERMINÍSTICA
 def posthoc_turron_by_gender(melted, variable):
     df = melted.copy()
     df = df[df['variable'] == variable]
@@ -277,6 +288,7 @@ comparisons = (
     ('overall_A', 'overall_B'),
 )
 
+#NÃO É UMA FUNÇÃO MAS CREIO QUE PODERIA SER UMA FUNÇÃO DETERMINÍSTICA
 for (cat_A, cat_B) in comparisons:
     for gender in ('male', 'female',):
         df_cat = df[[cat_A, cat_B, 'gender']].dropna()
@@ -290,6 +302,7 @@ for (cat_A, cat_B) in comparisons:
 #%% [markdown]
 # ## By Turron
 #%%
+#NÃO É DETERMINÍSTICA POIS CRIA UM GRÁFICO(sns.catplot)
 def turron_general(melted):
     g = sns.catplot(x="variable", y="value", hue="turron", kind="bar", data=melted, palette=PALETTE)
     plt.subplots_adjust(top=0.85)
@@ -306,7 +319,10 @@ sns.catplot(x="variable", y="value", hue="correct_guess", kind="bar", data=melte
 
 #%%
 
+#NÃO É DETERMINÍSTICA POIS CRIA UM GRÁFICO(sns.catplot)
+#MAS A PARTE DO PROCESSAMENTO PODERIA SER DETERMINÍSTICA
 # def turron_by_first_time_tasting(melted):
+      #É DETERMINÍSTICA MAS NUNCA É CHAMADA
 #     def rename_first_time_tasting(row):
 #         if row['first_time_tasting'] == 'Y':
 #             return 'naive'
@@ -329,7 +345,10 @@ sns.catplot(x="variable", y="value", hue="correct_guess", kind="bar", data=melte
 # turron_by_first_time_tasting(melted)
 
 #%%
+#NÃO É DETERMINÍSTICA POIS CRIA UM GRÁFICO(sns.FacetGrid)
+#MAS A PARTE DO PROCESSAMENTO PODERIA SER DETERMINÍSTICA
 def turron_by_first_time_tasting2(melted):
+    #É DETERMINÍSTICA
     def rename_first_time_tasting(row):
         if row['first_time_tasting'] == 'Y':
             return 'naive'
@@ -361,7 +380,7 @@ save_figure(g.fig, "turron_by_first_time_tasting.png", format='png')
 #%% [markdown]
 # ### Turron by first time tasting 2-WAY ANOVA
 
-
+#NÃO É UMA FUNÇÃO MAS PARECE QUE PODERIA SER DETERMINÍSTICA
 for variable in ['texture', 'visual', 'flavour', 'overall']:
     filtered = melted[melted['variable'] == variable]
     formula = 'value ~ C(turron) + C(first_time_tasting) + C(turron):C(first_time_tasting)'
@@ -372,6 +391,7 @@ for variable in ['texture', 'visual', 'flavour', 'overall']:
 
 #%% [markdown]
 # ### Turron by first time tasting posthoc
+#NÃO CONSEGUI ENCONTRAR REFERÊNCIA PARA A FUNÇÃO psturng
 def posthoc_turron_by_first_time_tasting(melted, variable):
     df = melted.copy()
     df = df[df['variable'] == variable].dropna()
@@ -389,7 +409,7 @@ for variable in ['texture', 'visual', 'flavour', 'overall']:
 
 #%% [markdown]
 # ## Turron by first time tasting comparisons
-
+#É determinística
 def paired_t_test_turron_by_naiveness(df):
     df = df.copy()
     comparisons = (
@@ -410,7 +430,10 @@ def paired_t_test_turron_by_naiveness(df):
 paired_t_test_turron_by_naiveness(df)
 
 #%%
+#NÃO É DETERMINÍSTICA POIS CRIA UM GRÁFICO(sns.FacetGrid)
+#MAS A PARTE DO PROCESSAMENTO PODERIA SER DETERMINÍSTICA
 def turron_by_correct_guess2(melted):
+    #É DETERMINÍSTICA
     def rename_correct_guess(row):
         if row['correct_guess'] == 'Y':
             return 'correct'
@@ -462,6 +485,8 @@ save_figure(g.fig, "guess_distribution.png", format='png')
 
 
 #%%
+#NÃO É DETERMINÍSTICA POIS CRIA GRÁFICOS (plt.subplots)
+#A PARTE DO PROCESSAMENTO PODERIA SER DETERMINÍSTICA
 def success_rate_by_naiveness(df):
     contingency = pd.crosstab(df.first_time_tasting, df.correct_guess)
     oddsratio, pvalue = stats.fisher_exact(contingency)
@@ -492,6 +517,8 @@ save_figure(fig, "success_rate_by_naiveness.png", format='png')
 
 
 #%%
+#NÃO É DETERMINÍSTICA PORQUE GERA UM GRÁFICO (plt.subplots())
+#MAS O PROCESSAMENTO PODERIA SER DETERMINÍSTICO
 def success_rate_by_gender(df):
     contingency = pd.crosstab(df.gender, df.correct_guess)
     oddsratio, pvalue = stats.fisher_exact(contingency)
@@ -534,6 +561,8 @@ comparissons = (
     ('overall_A', 'overall_B'),
 )
 
+#NÃO É DETERMINÍSTICA PORQUE GERA UM GRÁFICO (sns.catplot)
+#MAS A PARTE DO PROCESSAMENTO PODERIA SER DETERMINÍSTICA
 for param  in ['texture', 'flavour', 'visual', 'overall']:
     melted['composite_variable'] = melted['variable'] + melted['turron']
     param_a = param+"A"
@@ -541,6 +570,8 @@ for param  in ['texture', 'flavour', 'visual', 'overall']:
     mask = melted['composite_variable'].str.contains('|'.join([param_a, param_b]))
     sns.catplot(x="composite_variable", y="value", hue="name", kind="point", data=melted[mask])
 
+#NÃO É DETERMINÍSTICA PORQUE USA O COMANDO PRINT (print)
+#MAS A PARTE DO PROCESSAMENTO PODERIA SER DETERMINÍSTICA
 for (cat_A, cat_B) in comparissons:
     df_cat = df[[cat_A, cat_B]].dropna()
     df_cat['delta'] = df_cat[cat_A] - df_cat[cat_B]
@@ -553,7 +584,8 @@ for (cat_A, cat_B) in comparissons:
 #%% [markdown]
 # ### Effect of number of hours without eating
 #%%
-
+#NÃO É DETERMINÍSTICA PORQUE GERA UM GRÁFICO (sns.lmplot)
+#MAS A PARTE DO PROCESSAMENTO PODERIA SER DETERMINÍSTICA
 def influence_of_fasting(melted):
     melted_hours = melted[['variable', 'turron', 'hours since last eat', 'value']].dropna()
     correlations  = {}
@@ -597,7 +629,8 @@ save_figure(g.fig, "influence_of_fasting.png", format='png', bbox_inches='tight'
 
 
 
-
+#NÃO É DETERMINÍSTICA PORQUE GERA UM GRÁFICO (sns.lmplot)
+#MAS A PARTE DO PROCESSAMENTO PODERIA SER DETERMINÍSTICA
 def influence_of_fasting_by_turron(melted):
     melted_hours = melted[['variable', 'turron', 'hours since last eat', 'value']].dropna()
     correlations  = {}
@@ -664,7 +697,8 @@ g = influence_of_fasting_by_turron(melted)
 save_figure(g.fig, "influence_of_fasting_by_turron.pdf", bbox_inches='tight')
 save_figure(g.fig, "influence_of_fasting_by_turron.png", format='png', bbox_inches='tight')
 
-
+#NÃO É DETERMINÍSTICA PORQUE GERA UM GRÁFICO (sns.lmplot)
+#MAS A PARTE DO PROCESSAMENTO PODERIA SER DETERMINÍSTICA
 def influence_of_fasting_by_naiveness(melted):
     melted_hours = melted[['variable', 'turron', 'hours since last eat', 'value', 'first_time_tasting']].dropna()
     correlations  = {}
@@ -748,8 +782,11 @@ def influence_of_fasting_by_naiveness(melted):
 # ### Analysing preference coherence
 #%%
 
+#NÃO É DETERMINÍSTICA PORQUE GERA UM GRÁFICO (plt.bar)
+#MAS A PARTE DO PROCESSAMENTO PODERIA SER DETERMINÍSTICA
 def preference_coherence(df):
     df = df.copy()
+    #É DETERMINÍSTICA
     def calculate_preference(row):
         if row.overall_A > row.overall_B:
             return 'A'
@@ -758,6 +795,7 @@ def preference_coherence(df):
         else:
             return 'tie'
     df['preference'] = df.apply(calculate_preference, axis=1)
+    #É DETERMINÍSTICA
     def calculate_coherence(row):
         if row.preference == 'tie':
             return 'Tie'
@@ -804,7 +842,8 @@ save_figure(fig, "preference_coherence.pdf", bbox_inches='tight')
 save_figure(fig, "preference_coherence.png", format='png', bbox_inches='tight')
 
 #%%
-
+#NÃO É DETERMINÍSTICA PORQUE POSSUI COMANDOS PRINT (PRINT)
+#MAS SE COMENTÁ-LOS A FUNÇÃO SE TORNA DETERMINÍSTICA
 def influence_of_naiveness_on_score(df, with_individuals=True):
     total_participants = len(df)
 
@@ -868,6 +907,7 @@ def influence_of_naiveness_on_score(df, with_individuals=True):
 
     return sankey_data
 
+#É DETERMINÍSTICA
 def format_for_sankeymatic(data):
     """
     Formats sankey data to be directly pasted on
@@ -885,6 +925,8 @@ print(format_for_sankeymatic(sankey_data))
 
 
 #%%
+#NÃO É DETERMINÍSTICA PORQUE GERA UM GRÁFICO (plt.subplots)
+#MAS A PARTE DO PROCESSAMENTO PODERIA SER DETERMINÍSTICA
 def guess_rate(df):
     df = df.copy()
     rename_values = lambda x: 'Correct' if x['correct_guess'] == 'Y' else 'Incorrect'
